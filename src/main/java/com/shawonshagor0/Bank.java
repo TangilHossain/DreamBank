@@ -10,6 +10,15 @@ public class Bank {
 
     public void createAccount(Scanner sc) {
 
+
+        System.out.println("""
+                We offer two types of account:
+                1. Current Account
+                2. Savings Account""");
+        System.out.print("Select account type: ");
+
+        int accountType = sc.nextInt();sc.nextLine();
+
         System.out.println("Input account Name: ");
         String name = sc.nextLine();
 
@@ -19,14 +28,28 @@ public class Bank {
         System.out.println("Input initial balance: ");
         int balance;
         try{
-            balance = sc.nextInt();
+            balance = sc.nextInt();sc.nextLine();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
 
         long accountNumber = new Random().nextLong(1_000_000_000L, 9_000_000_000L);
 
-        BankAccount account = new BankAccount(String.valueOf(accountNumber), name, password, balance);
+        BankAccount account;
+        if(accountType == 1){
+            System.out.print("Enter overdraft limit: ");
+            int overdraftLimit = sc.nextInt();
+            account = new CurrentAccount(String.valueOf(accountNumber), name, password, overdraftLimit, balance);
+        }
+        else if(accountType == 2){
+            System.out.print("Enter interest Rate: ");
+            int interestRate = sc.nextInt();
+            account = new SavingsAccount(String.valueOf(accountNumber), name, interestRate, password, balance);
+        }
+        else{
+            System.out.println("Invalid account type");
+            return;
+        }
         accounts.add(account);
         System.out.println("Account creation successful!\n Account number: " + accountNumber);
     }
@@ -46,7 +69,7 @@ public class Bank {
     }
     public void displayAllAccount(){
         for(BankAccount account: accounts){
-            System.out.println(account.getAccountNumber() + " | " + account.getAccountHolderName() + " | " + account.getBalance());
+            System.out.println(account.getAccountNumber() + " | " +account.getAccountType() + " | " + account.getAccountHolderName() + " | " + account.getBalance());
         }
     }
 }

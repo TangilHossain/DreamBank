@@ -9,7 +9,7 @@ public class BankAccount {
     private int balance;
 
 
-    public BankAccount(String accountNumber ,String accountHolderName, String password, int balance) {
+    public BankAccount(String accountNumber , String accountHolderName, String password, String accountType, int balance) {
         this.accountHolderName = accountHolderName;
         this.accountNumber = accountNumber;
         this.password = password;
@@ -62,5 +62,11 @@ public class BankAccount {
         System.out.println(amount + " deducted to " + this.accountHolderName + "'s account.\n Current balance: " + this.balance + ".\n");
     }
 
+    public boolean isSavingsAccount(BankAccount account){
+        return account instanceof SavingsAccount;
+    }
 
+    public String getAccountType() {
+        return "Default Account";
+    }
 }

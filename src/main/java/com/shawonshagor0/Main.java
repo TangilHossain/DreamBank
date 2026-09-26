@@ -12,8 +12,8 @@ public class Main {
             System.out.println("""
                     Choose option:\s
                     1. Check Balance
-                    2. Debit
-                    3. Credit
+                    2. Deposit
+                    3. Withdraw
                     0. Log Out
                     """);
             int inputOption = sc.nextInt();
