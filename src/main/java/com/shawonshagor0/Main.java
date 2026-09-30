@@ -1,22 +1,27 @@
 package com.shawonshagor0;
 
+import com.shawonshagor0.exceptions.InsuffiecientBalanceException;
+import com.shawonshagor0.exceptions.NegativeAmountException;
+
 import java.util.Scanner;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
-    private static void loggedIn(BankAccount account, Scanner sc) {
+    private static void loggedIn(Bank bank, BankAccount account, Scanner sc) {
 
         boolean isLoggedIn = true;
+        System.out.println("Welcome to Dream Bank Mr/Mrs" + account.getAccountHolderName());
         while(isLoggedIn){
             System.out.println("""
                     Choose option:\s
                     1. Check Balance
                     2. Deposit
                     3. Withdraw
+                    4. Transfer
                     0. Log Out
                     """);
-            int inputOption = sc.nextInt();
+            int inputOption = sc.nextInt();sc.nextLine();
             switch (inputOption) {
                 case 1:
                     System.out.println("Current balance is: " + account.getBalance());
@@ -29,10 +34,30 @@ public class Main {
                     account.deposit(addBalance);
                     break;
                 case 3:
-                    System.out.println("Current balance is " + account.getBalance() + "\nEnter the amount to be deducted:");
+                    System.out.println("Current balance is " + account.getBalance() + "\nEnter the amount to be withdrawn:");
 
                     int deductBalance = sc.nextInt();
-                    account.withdraw(deductBalance);
+                    try {
+                        account.withdraw(deductBalance);
+                    } catch (InsuffiecientBalanceException | NegativeAmountException e) {
+                        System.out.println(e.getMessage());
+                    }
+                    break;
+                case 4:
+                    System.out.print("Enter the receiver's account number: ");
+                    String destAccountNumber = sc.nextLine();
+                    BankAccount destAcc = bank.findAccount(destAccountNumber);
+                    if(destAcc == null){
+                        System.out.println("Account does not exist!");
+                        break;
+                    }
+                    System.out.print("Enter the amount to be transferred: ");
+                    double amount = sc.nextDouble();sc.nextLine();
+                    try {
+                        account.transfer(destAcc, amount);
+                    }catch (Exception e){
+                        System.out.println("Transfer failed! " + e.getMessage());
+                    }
                     break;
                 case 0:
                     System.out.println("""
@@ -76,7 +101,7 @@ public class Main {
                     System.out.print("Please enter your account number: ");
                     String inputAccount = sc.nextLine();
 
-                    System.out.println("Please enter your account password: ");
+                    System.out.print("Please enter your account password: ");
                     String inputPass = sc.nextLine();
 
                     BankAccount account = bank.findAccount(inputAccount, inputPass);
@@ -85,7 +110,7 @@ public class Main {
                     }
                     else{
                         System.out.println("Login successful.\n");
-                        loggedIn(account, sc);
+                        loggedIn(bank, account, sc);
                     }
                     break;
                 case 3:

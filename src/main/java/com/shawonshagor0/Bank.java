@@ -1,5 +1,6 @@
 package com.shawonshagor0;
 
+import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Random;
@@ -8,7 +9,7 @@ import java.util.Scanner;
 public class Bank {
     private final ArrayList<BankAccount> accounts = new ArrayList<>();
 
-    public void createAccount(Scanner sc) {
+    public void createAccount(@NotNull Scanner sc) {
 
 
         System.out.println("""
@@ -19,13 +20,13 @@ public class Bank {
 
         int accountType = sc.nextInt();sc.nextLine();
 
-        System.out.println("Input account Name: ");
+        System.out.print("Input account Name: ");
         String name = sc.nextLine();
 
-        System.out.println("Input new Password: ");
+        System.out.print("Input new Password: ");
         String password = sc.nextLine();
 
-        System.out.println("Input initial balance: ");
+        System.out.print("Input initial balance: ");
         int balance;
         try{
             balance = sc.nextInt();sc.nextLine();
@@ -42,16 +43,14 @@ public class Bank {
             account = new CurrentAccount(String.valueOf(accountNumber), name, password, overdraftLimit, balance);
         }
         else if(accountType == 2){
-            System.out.print("Enter interest Rate: ");
-            int interestRate = sc.nextInt();
-            account = new SavingsAccount(String.valueOf(accountNumber), name, interestRate, password, balance);
+            account = new SavingsAccount(String.valueOf(accountNumber), name, password, balance);
         }
         else{
             System.out.println("Invalid account type");
             return;
         }
         accounts.add(account);
-        System.out.println("Account creation successful!\n Account number: " + accountNumber);
+        System.out.println("Account number: " + accountNumber);
     }
 
     public BankAccount findAccount(String accNumber, String password){
@@ -63,6 +62,14 @@ public class Bank {
                 else{
                     System.out.println("Wrong Password!");
                 }
+            }
+        }
+        return null;
+    }
+    public BankAccount findAccount(String accNumber){
+        for(BankAccount account : accounts){
+            if(Objects.equals(account.getAccountNumber(), accNumber)){
+                return account;
             }
         }
         return null;
